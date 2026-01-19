@@ -1,0 +1,287 @@
+import { Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../core/services/auth.service';
+
+@Component({
+    selector: 'app-login',
+    standalone: true,
+    imports: [CommonModule, FormsModule],
+    template: `
+    <main class="flex-1 flex flex-col md:flex-row mesh-gradient min-h-screen">
+      <!-- Left Side: Features & Branding -->
+      <div class="flex-1 flex flex-col justify-center px-10 py-12 md:px-20">
+        <div class="max-w-[540px]">
+          <h1 class="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight mb-6">
+            Powering the next generation of <span class="text-primary">Minecraft servers.</span>
+          </h1>
+          <p class="text-white/70 text-lg md:text-xl mb-12">
+            Experience lag-free gaming without the network headache with our professional hosting
+            platform.
+          </p>
+          <div class="grid gap-6">
+            <!-- Feature 1 -->
+            <div
+              class="flex items-start gap-4 p-4 rounded-xl border border-white/5 bg-white/5 backdrop-blur-sm"
+            >
+              <div class="flex items-center justify-center size-12 rounded-lg bg-primary/20 text-primary">
+                <span class="material-symbols-outlined text-[28px]">shield</span>
+              </div>
+              <div>
+                <h3 class="text-white font-bold text-lg">Zero Port Forwarding</h3>
+                <p class="text-white/60">Connect instantly without the network headache.</p>
+              </div>
+            </div>
+            <!-- Feature 2 -->
+            <div
+              class="flex items-start gap-4 p-4 rounded-xl border border-white/5 bg-white/5 backdrop-blur-sm"
+            >
+              <div class="flex items-center justify-center size-12 rounded-lg bg-primary/20 text-primary">
+                <span class="material-symbols-outlined text-[28px]">phone_android</span>
+              </div>
+              <div>
+                <h3 class="text-white font-bold text-lg">Hosted on Android</h3>
+                <p class="text-white/60">Unique architecture optimized for mobile efficiency.</p>
+              </div>
+            </div>
+            <!-- Feature 3 -->
+            <div
+              class="flex items-start gap-4 p-4 rounded-xl border border-white/5 bg-white/5 backdrop-blur-sm"
+            >
+              <div class="flex items-center justify-center size-12 rounded-lg bg-primary/20 text-primary">
+                <span class="material-symbols-outlined text-[28px]">terminal</span>
+              </div>
+              <div>
+                <h3 class="text-white font-bold text-lg">Full RCON Control</h3>
+                <p class="text-white/60">Take total command of your server from anywhere.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side: Login Form -->
+      <div class="flex-1 flex items-center justify-center px-6 py-12 md:px-10">
+        <div
+          class="w-full max-w-[440px] bg-[#1c271f] border border-white/10 rounded-2xl p-8 md:p-10"
+        >
+          <div class="mb-8 text-center">
+            <h2 class="text-white text-3xl font-bold mb-2">Welcome Back</h2>
+            <p class="text-white/60">Manage your servers with ease</p>
+          </div>
+
+          <!-- Error Message -->
+          @if (errorMessage()) {
+            <div class="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+              {{ errorMessage() }}
+            </div>
+          }
+
+          <!-- SSO Button -->
+          <div class="flex flex-col gap-3">
+            <button
+              (click)="signInWithGoogle()"
+              [disabled]="isLoading()"
+              class="flex w-full cursor-pointer items-center justify-center rounded-lg h-12 px-5 bg-white text-[#111813] gap-3 text-base font-bold hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <svg class="size-5" viewBox="0 0 24 24">
+                <path
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  fill="#4285F4"
+                ></path>
+                <path
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  fill="#34A853"
+                ></path>
+                <path
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                  fill="#FBBC05"
+                ></path>
+                <path
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  fill="#EA4335"
+                ></path>
+              </svg>
+              <span>Continue with Google</span>
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div class="relative my-8">
+            <div class="absolute inset-0 flex items-center">
+              <span class="w-full border-t border-white/10"></span>
+            </div>
+            <div class="relative flex justify-center text-sm uppercase">
+              <span class="bg-[#1c271f] px-2 text-white/40">Or sign in with email</span>
+            </div>
+          </div>
+
+          <!-- Credentials Form -->
+          <form class="space-y-6" (ngSubmit)="signInWithEmail()">
+            <div>
+              <label class="block text-sm font-medium text-white/80 mb-2" for="email"
+                >Email Address</label
+              >
+              <input
+                class="w-full bg-background-dark/50 border border-white/10 rounded-lg h-12 px-4 text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+                id="email"
+                name="email"
+                [(ngModel)]="email"
+                placeholder="steve@craft.com"
+                type="email"
+                required
+              />
+            </div>
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <label class="block text-sm font-medium text-white/80" for="password">Password</label>
+                <a class="text-xs font-semibold text-primary hover:underline" href="#">
+                  Forgot password?
+                </a>
+              </div>
+              <div class="relative">
+                <input
+                  class="w-full bg-background-dark/50 border border-white/10 rounded-lg h-12 px-4 text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+                  id="password"
+                  name="password"
+                  [(ngModel)]="password"
+                  placeholder="••••••••"
+                  [type]="showPassword() ? 'text' : 'password'"
+                  required
+                />
+                <button
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60"
+                  type="button"
+                  (click)="togglePasswordVisibility()"
+                >
+                  <span class="material-symbols-outlined text-[20px]">
+                    {{ showPassword() ? 'visibility_off' : 'visibility' }}
+                  </span>
+                </button>
+              </div>
+            </div>
+            <div class="flex items-center">
+              <input
+                class="size-4 rounded border-white/10 bg-background-dark/50 text-primary focus:ring-primary"
+                id="remember"
+                type="checkbox"
+                [(ngModel)]="rememberMe"
+                name="remember"
+              />
+              <label class="ml-2 text-sm text-white/60" for="remember">Remember this device</label>
+            </div>
+            <button
+              type="submit"
+              [disabled]="isLoading()"
+              class="w-full flex cursor-pointer items-center justify-center rounded-lg h-12 px-4 bg-primary text-[#111813] text-base font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              @if (isLoading()) {
+                <span class="material-symbols-outlined animate-spin mr-2">progress_activity</span>
+              }
+              Sign In to Dashboard
+            </button>
+          </form>
+
+          <!-- Footer -->
+          <div class="mt-8 pt-6 border-t border-white/5 text-center">
+            <p class="text-sm text-white/40">
+              Don't have an account?
+              <a class="text-primary font-semibold hover:underline" href="#">Start for free</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Global Footer / Policy Links -->
+    <footer class="bg-background-dark border-t border-white/5 py-6 px-10">
+      <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-white/30 text-xs">© 2024 Arm-MC Hosting Solutions. All rights reserved.</p>
+        <div class="flex gap-6">
+          <a class="text-white/30 text-xs hover:text-white transition-colors" href="#">Privacy Policy</a>
+          <a class="text-white/30 text-xs hover:text-white transition-colors" href="#">Terms of Service</a>
+          <a class="text-white/30 text-xs hover:text-white transition-colors" href="#">Status</a>
+        </div>
+      </div>
+    </footer>
+  `,
+    styles: [
+        `
+      :host {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .mesh-gradient {
+        background-color: #102216;
+        background-image: radial-gradient(at 0% 0%, rgba(37, 207, 93, 0.05) 0, transparent 50%),
+          radial-gradient(at 100% 100%, rgba(19, 236, 91, 0.05) 0, transparent 50%);
+      }
+    `,
+    ],
+})
+export class LoginComponent {
+    private authService = inject(AuthService);
+
+    email = '';
+    password = '';
+    rememberMe = false;
+    showPassword = signal(false);
+    isLoading = signal(false);
+    errorMessage = signal<string | null>(null);
+
+    togglePasswordVisibility(): void {
+        this.showPassword.update((v) => !v);
+    }
+
+    async signInWithEmail(): Promise<void> {
+        if (!this.email || !this.password) {
+            this.errorMessage.set('Please enter both email and password.');
+            return;
+        }
+
+        this.isLoading.set(true);
+        this.errorMessage.set(null);
+
+        try {
+            await this.authService.signInWithEmail(this.email, this.password);
+        } catch (error: any) {
+            this.errorMessage.set(this.getErrorMessage(error.code));
+        } finally {
+            this.isLoading.set(false);
+        }
+    }
+
+    async signInWithGoogle(): Promise<void> {
+        this.isLoading.set(true);
+        this.errorMessage.set(null);
+
+        try {
+            await this.authService.signInWithGoogle();
+        } catch (error: any) {
+            this.errorMessage.set(this.getErrorMessage(error.code));
+        } finally {
+            this.isLoading.set(false);
+        }
+    }
+
+    private getErrorMessage(code: string): string {
+        switch (code) {
+            case 'auth/invalid-email':
+                return 'Invalid email address.';
+            case 'auth/user-disabled':
+                return 'This account has been disabled.';
+            case 'auth/user-not-found':
+                return 'No account found with this email.';
+            case 'auth/wrong-password':
+                return 'Incorrect password.';
+            case 'auth/too-many-requests':
+                return 'Too many failed attempts. Please try again later.';
+            case 'auth/popup-closed-by-user':
+                return 'Sign-in popup was closed.';
+            default:
+                return 'An error occurred. Please try again.';
+        }
+    }
+}

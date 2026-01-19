@@ -1,3 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #13ec5b;
+  --color-background-light: #f6f8f6;
+  --color-background-dark: #0a120c;
+  --color-surface-dark: #16281b;
+  --color-border-dark: #28392e;
+  --color-muted: #9db9a6;
+  --font-family-display: 'Space Grotesk', sans-serif;
+}
+
+body {
+  font-family: var(--font-family-display);
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #102216;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #28392e;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #13ec5b;
+}
