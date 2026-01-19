@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tunnel Instance Details | Arm-MC Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .terminal-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .terminal-scrollbar::-webkit-scrollbar-track {
+            background: #111813;
+        }
+        .terminal-scrollbar::-webkit-scrollbar-thumb {
+            background: #28392e;
+            border-radius: 4px;
+        }
+        .terminal-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #13ec5b;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-white/10 dark:border-b-[#28392e] px-10 py-3 bg-white dark:bg-[#111813]">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-6">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Arm-MC Admin</h2>
+</div>
+<nav class="flex items-center gap-9">
+<a class="text-white/70 hover:text-primary text-sm font-medium transition-colors" href="#">Dashboard</a>
+<a class="text-primary text-sm font-medium leading-normal border-b-2 border-primary pb-1" href="#">Tunnels</a>
+<a class="text-white/70 hover:text-primary text-sm font-medium transition-colors" href="#">Nodes</a>
+<a class="text-white/70 hover:text-primary text-sm font-medium transition-colors" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<label class="flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-[#9db9a6] flex border-none bg-[#28392e] items-center justify-center pl-4 rounded-l-lg" data-icon="search">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-0 border-none bg-[#28392e] h-full placeholder:text-[#9db9a6] px-4 rounded-l-none pl-2 text-sm font-normal" placeholder="Search tunnel ID..." value=""/>
+</div>
+</label>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-lg h-10 bg-[#28392e] text-white px-2.5 hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 bg-[#28392e] text-white px-2.5 hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">account_circle</span>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-primary/30" data-alt="User profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB8927Wiien-inxQeSJhzTYYgP_2z7JQoSYT5P5yvLRCAB-to9_mHdImgf71izg3U8rIiHsHShcOuQHMKL5T3IJBGw6la_EwAJd-rKYNEBcxR31Kf6xKLA2qz81tVrs0qHZtdSa4nGt0-V-LjoAhqhrFQEInCZZ5zttOe-Jq83Vkb-EU25YWgQfn-WaOW7yvfH2361HHqu1v5j37lXx2PkJwn2rIM5ysGueQjXEgstaL1vQaiUcuw7-9twbPbN2unu-hUY7g7e1yBT8");'></div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 px-4 md:px-10 lg:px-40 py-6 max-w-[1400px] mx-auto w-full">
+<!-- Breadcrumbs -->
+<div class="flex flex-wrap gap-2 mb-4">
+<a class="text-[#9db9a6] hover:text-primary text-sm font-medium transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-sm">home</span> Home
+                    </a>
+<span class="text-[#9db9a6] text-sm font-medium">/</span>
+<a class="text-[#9db9a6] hover:text-primary text-sm font-medium transition-colors" href="#">Tunnels</a>
+<span class="text-[#9db9a6] text-sm font-medium">/</span>
+<span class="text-white text-sm font-medium">Instance: mc-server-01</span>
+</div>
+<!-- Page Heading & Quick Actions -->
+<div class="flex flex-wrap justify-between items-end gap-6 mb-8">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<h1 class="text-white text-4xl font-black leading-tight tracking-tight">mc-server-01.arm-mc.io</h1>
+<span class="px-3 py-1 bg-primary/20 text-primary text-xs font-bold rounded-full border border-primary/30 flex items-center gap-1">
+<span class="size-2 bg-primary rounded-full animate-pulse"></span> ACTIVE
+                            </span>
+</div>
+<p class="text-[#9db9a6] text-lg font-normal">Node: <span class="text-white">US-East-1 (Android Arm64)</span> | PumpkinMC v2.4.1</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center gap-2 rounded-lg h-12 px-6 bg-[#28392e] text-white font-bold hover:bg-[#344b3c] transition-all active:scale-95 shadow-lg shadow-black/20">
+<span class="material-symbols-outlined">content_copy</span>
+<span>Copy Subdomain</span>
+</button>
+<button class="flex items-center justify-center gap-2 rounded-lg h-12 px-6 bg-primary text-background-dark font-bold hover:bg-primary/90 transition-all active:scale-95 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">refresh</span>
+<span>Refresh Data</span>
+</button>
+<button class="flex items-center justify-center gap-2 rounded-lg h-12 px-6 bg-red-500/10 border border-red-500/50 text-red-500 font-bold hover:bg-red-500 hover:text-white transition-all active:scale-95">
+<span class="material-symbols-outlined">cancel</span>
+<span>Terminate Tunnel</span>
+</button>
+</div>
+</div>
+<!-- Telemetry Charts -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+<!-- CPU Chart -->
+<div class="flex flex-col gap-4 rounded-xl border border-[#3b5443] bg-[#111813]/50 p-6 shadow-xl backdrop-blur-sm">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-[#9db9a6] text-sm font-medium uppercase tracking-wider">CPU Usage (%)</p>
+<p class="text-white tracking-tight text-4xl font-bold mt-1">24.8%</p>
+</div>
+<div class="flex items-center gap-2 px-2 py-1 bg-red-500/10 rounded">
+<span class="material-symbols-outlined text-red-500 text-sm">trending_up</span>
+<p class="text-red-500 text-sm font-medium">+2.1%</p>
+</div>
+</div>
+<div class="flex min-h-[200px] flex-col gap-4">
+<svg fill="none" height="160" preserveaspectratio="none" viewbox="0 0 478 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V150H0V109Z" fill="url(#paint_cpu_grad)"></path>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#13ec5b" stroke-linecap="round" stroke-width="3"></path>
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="paint_cpu_grad" x1="236" x2="236" y1="1" y2="150">
+<stop stop-color="#13ec5b" stop-opacity="0.3"></stop>
+<stop offset="1" stop-color="#13ec5b" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="flex justify-between px-2">
+<p class="text-[#9db9a6] text-xs font-bold">-60s</p>
+<p class="text-[#9db9a6] text-xs font-bold">-45s</p>
+<p class="text-[#9db9a6] text-xs font-bold">-30s</p>
+<p class="text-[#9db9a6] text-xs font-bold">-15s</p>
+<p class="text-primary text-xs font-bold">LIVE</p>
+</div>
+</div>
+</div>
+<!-- RAM Chart -->
+<div class="flex flex-col gap-4 rounded-xl border border-[#3b5443] bg-[#111813]/50 p-6 shadow-xl backdrop-blur-sm">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-[#9db9a6] text-sm font-medium uppercase tracking-wider">RAM Consumption</p>
+<p class="text-white tracking-tight text-4xl font-bold mt-1">1,402 MB</p>
+</div>
+<div class="flex items-center gap-2 px-2 py-1 bg-primary/10 rounded">
+<span class="material-symbols-outlined text-primary text-sm">trending_down</span>
+<p class="text-primary text-sm font-medium">-12MB</p>
+</div>
+</div>
+<div class="flex min-h-[200px] flex-col gap-4">
+<svg fill="none" height="160" preserveaspectratio="none" viewbox="0 0 478 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 40C18.1538 42 18.1538 45 36.3077 48C54.4615 50 54.4615 42 72.6154 44C90.7692 46 90.7692 55 108.923 58C127.077 60 127.077 52 145.231 54C163.385 56 163.385 62 181.538 65C199.692 68 199.692 72 217.846 75C236 78 236 82 254.154 85C272.308 88 272.308 92 290.462 95C308.615 98 308.615 94 326.769 92C344.923 90 344.923 85 363.077 82C381.231 80 381.231 75 399.385 72C417.538 70 417.538 68 435.692 65C453.846 62 453.846 58 472 55V150H0V40Z" fill="url(#paint_ram_grad)"></path>
+<path d="M0 40C18.1538 42 18.1538 45 36.3077 48C54.4615 50 54.4615 42 72.6154 44C90.7692 46 90.7692 55 108.923 58C127.077 60 127.077 52 145.231 54C163.385 56 163.385 62 181.538 65C199.692 68 199.692 72 217.846 75C236 78 236 82 254.154 85C272.308 88 272.308 92 290.462 95C308.615 98 308.615 94 326.769 92C344.923 90 344.923 85 363.077 82C381.231 80 381.231 75 399.385 72C417.538 70 417.538 68 435.692 65C453.846 62 453.846 58 472 55" stroke="#13ec5b" stroke-linecap="round" stroke-width="3"></path>
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="paint_ram_grad" x1="236" x2="236" y1="1" y2="150">
+<stop stop-color="#13ec5b" stop-opacity="0.3"></stop>
+<stop offset="1" stop-color="#13ec5b" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="flex justify-between px-2">
+<p class="text-[#9db9a6] text-xs font-bold">-60s</p>
+<p class="text-[#9db9a6] text-xs font-bold">-45s</p>
+<p class="text-[#9db9a6] text-xs font-bold">-30s</p>
+<p class="text-[#9db9a6] text-xs font-bold">-15s</p>
+<p class="text-primary text-xs font-bold">LIVE</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Info Cards & Console Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Metadata Info Column -->
+<div class="lg:col-span-1 space-y-6">
+<div class="rounded-xl border border-[#3b5443] bg-[#111813] p-6">
+<h3 class="text-white text-lg font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">info</span>
+                                Instance Metadata
+                            </h3>
+<div class="space-y-4">
+<div>
+<p class="text-[#9db9a6] text-xs font-bold uppercase mb-1">Tunnel User ID</p>
+<div class="flex items-center justify-between bg-[#28392e]/40 p-2 rounded border border-white/5">
+<code class="text-sm text-primary">usr_9921_ax32</code>
+<button class="text-[#9db9a6] hover:text-white"><span class="material-symbols-outlined text-[18px]">content_copy</span></button>
+</div>
+</div>
+<div>
+<p class="text-[#9db9a6] text-xs font-bold uppercase mb-1">Access Token</p>
+<div class="flex items-center justify-between bg-[#28392e]/40 p-2 rounded border border-white/5">
+<code class="text-sm text-white">••••••••••••••••</code>
+<button class="text-[#9db9a6] hover:text-white"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
+</div>
+</div>
+<div>
+<p class="text-[#9db9a6] text-xs font-bold uppercase mb-1">Connection Deadline</p>
+<p class="text-white font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-yellow-500">timer</span>
+                                        23h 12m 45s remaining
+                                    </p>
+</div>
+<hr class="border-[#28392e]"/>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<p class="text-[#9db9a6] text-[10px] font-bold uppercase mb-1">Created At</p>
+<p class="text-white text-xs">2023-11-24 14:20</p>
+</div>
+<div>
+<p class="text-[#9db9a6] text-[10px] font-bold uppercase mb-1">Last Updated</p>
+<p class="text-white text-xs">2 mins ago</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Node Status Widget -->
+<div class="rounded-xl border border-[#3b5443] bg-gradient-to-br from-[#111813] to-[#1a2e20] p-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-white text-lg font-bold">Node Health</h3>
+<span class="text-primary text-xs font-bold px-2 py-1 bg-primary/10 rounded">OPTIMAL</span>
+</div>
+<div class="space-y-3">
+<div class="w-full bg-[#28392e] rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 85%"></div>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-[#9db9a6]">Bandwidth Capacity</span>
+<span class="text-white">850 Mbps / 1 Gbps</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Console Terminal Column -->
+<div class="lg:col-span-2 rounded-xl border border-[#3b5443] bg-[#0c0c0c] flex flex-col shadow-2xl overflow-hidden">
+<div class="flex items-center justify-between px-4 py-3 bg-[#111813] border-b border-[#28392e]">
+<div class="flex items-center gap-3">
+<div class="flex gap-1.5">
+<div class="size-2.5 rounded-full bg-red-500/50"></div>
+<div class="size-2.5 rounded-full bg-yellow-500/50"></div>
+<div class="size-2.5 rounded-full bg-green-500/50"></div>
+</div>
+<span class="text-xs font-mono text-[#9db9a6] ml-2">PumpkinMC-Console [v2.4.1]</span>
+</div>
+<div class="flex gap-4">
+<button class="text-[#9db9a6] hover:text-white flex items-center gap-1 text-xs">
+<span class="material-symbols-outlined text-sm">download</span> Logs
+                                </button>
+<button class="text-[#9db9a6] hover:text-white flex items-center gap-1 text-xs">
+<span class="material-symbols-outlined text-sm">delete</span> Clear
+                                </button>
+</div>
+</div>
+<div class="p-4 font-mono text-sm h-[420px] overflow-y-auto terminal-scrollbar leading-relaxed">
+<div class="mb-1"><span class="text-blue-400">[14:20:01 INFO]:</span> Loading PumpkinMC instance on ARM64...</div>
+<div class="mb-1"><span class="text-blue-400">[14:20:03 INFO]:</span> Binding tunnel to port 25565</div>
+<div class="mb-1"><span class="text-green-400">[14:20:05 SUCCESS]:</span> Subdomain assigned: mc-server-01.arm-mc.io</div>
+<div class="mb-1"><span class="text-blue-400">[14:21:44 INFO]:</span> User [Player99] connected from 192.168.1.1</div>
+<div class="mb-1"><span class="text-yellow-400">[14:22:10 WARN]:</span> High resource usage detected in Chunk Loading</div>
+<div class="mb-1"><span class="text-blue-400">[14:23:15 INFO]:</span> Starting routine telemetry sync...</div>
+<div class="mb-1"><span class="text-blue-400">[14:24:00 INFO]:</span> Server state: IDLE_WAITING</div>
+<div class="mb-1"><span class="text-blue-400">[14:24:32 INFO]:</span> Keep-alive pulse sent to controller</div>
+<div class="mb-1"><span class="text-blue-400">[14:25:01 INFO]:</span> User [AdminDev] connected via SSH bridge</div>
+<div class="mb-1"><span class="text-primary tracking-widest animate-pulse">_</span></div>
+</div>
+<div class="p-3 bg-[#111813] border-t border-[#28392e] flex items-center gap-3">
+<span class="text-primary font-bold ml-1">&gt;</span>
+<input class="flex-1 bg-transparent border-none text-white focus:ring-0 placeholder:text-[#3b5443] text-sm font-mono" placeholder="Type a command (e.g. /stop, /reload)..." type="text"/>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mt-auto px-10 py-8 border-t border-[#28392e] bg-[#111813] text-center">
+<p class="text-[#9db9a6] text-sm">Arm-MC Admin Dashboard © 2024 | Powered by PumpkinMC Android Virtualization</p>
+<div class="flex justify-center gap-6 mt-4">
+<a class="text-[#9db9a6] hover:text-primary transition-colors text-xs font-medium" href="#">Terms of Service</a>
+<a class="text-[#9db9a6] hover:text-primary transition-colors text-xs font-medium" href="#">Privacy Policy</a>
+<a class="text-[#9db9a6] hover:text-primary transition-colors text-xs font-medium" href="#">Documentation</a>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

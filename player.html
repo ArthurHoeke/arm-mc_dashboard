@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Arm-MC | Server Control Panel</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "panel-dark": "#1a2e1f",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .console-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .console-scrollbar::-webkit-scrollbar-track {
+            background: #111813;
+        }
+        .console-scrollbar::-webkit-scrollbar-thumb {
+            background: #28392e;
+            border-radius: 4px;
+        }
+        .console-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #3b5443;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen text-slate-900 dark:text-white">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-[#28392e] px-10 py-3 bg-white dark:bg-background-dark">
+<div class="flex items-center gap-4">
+<div class="size-8 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">Arm-MC</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<nav class="flex items-center gap-9">
+<a class="text-sm font-medium leading-normal text-primary" href="#">Dashboard</a>
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Players</a>
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">World</a>
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Schedules</a>
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Settings</a>
+</nav>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-[#28392e] hover:bg-slate-200 dark:hover:bg-[#3b5443] transition-colors">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-[#28392e] hover:bg-slate-200 dark:hover:bg-[#3b5443] transition-colors">
+<span class="material-symbols-outlined text-xl">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex flex-1 justify-center py-8 px-4 lg:px-10 xl:px-40">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1 gap-6">
+<!-- Top Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="flex flex-col gap-2 rounded-xl p-6 border border-slate-200 dark:border-[#3b5443] bg-white dark:bg-[#111813] shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-slate-500 dark:text-[#9db9a6] text-sm font-medium">Server Status</p>
+<span class="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+</div>
+<p class="text-2xl font-bold leading-tight">Online</p>
+<p class="text-primary text-xs font-medium">Running for 12d 4h</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 border border-slate-200 dark:border-[#3b5443] bg-white dark:bg-[#111813] shadow-sm">
+<p class="text-slate-500 dark:text-[#9db9a6] text-sm font-medium">Performance</p>
+<p class="text-2xl font-bold leading-tight">20.0 TPS</p>
+<div class="w-full bg-slate-100 dark:bg-[#28392e] h-1.5 rounded-full mt-1">
+<div class="bg-primary h-full w-[100%] rounded-full shadow-[0_0_8px_rgba(19,236,91,0.4)]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 border border-slate-200 dark:border-[#3b5443] bg-white dark:bg-[#111813] shadow-sm">
+<p class="text-slate-500 dark:text-[#9db9a6] text-sm font-medium">Population</p>
+<p class="text-2xl font-bold leading-tight">14 / 50</p>
+<p class="text-primary text-xs font-medium">Peak: 42 players</p>
+</div>
+</div>
+<!-- Main Dashboard Area -->
+<div class="flex flex-col lg:flex-row gap-6">
+<!-- Left Column: Live Console -->
+<div class="flex-1 flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h2 class="text-xl font-bold tracking-tight">Live Console</h2>
+<div class="flex gap-2">
+<button class="text-xs font-medium text-slate-500 dark:text-[#9db9a6] hover:text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">download</span> Export Logs
+                                    </button>
+<button class="text-xs font-medium text-slate-500 dark:text-[#9db9a6] hover:text-red-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">delete</span> Clear
+                                    </button>
+</div>
+</div>
+<div class="flex flex-col flex-1 rounded-xl border border-slate-200 dark:border-[#3b5443] bg-[#0a0a0a] overflow-hidden min-h-[500px] shadow-2xl">
+<!-- Console Messages -->
+<div class="flex-1 p-4 font-mono text-sm overflow-y-auto console-scrollbar">
+<div class="flex gap-3 mb-1.5">
+<span class="text-slate-500 shrink-0">14:02:11</span>
+<span class="text-blue-400 font-bold shrink-0">[INFO]</span>
+<span class="text-slate-300">Server thread/INFO: Starting minecraft server version 1.20.1</span>
+</div>
+<div class="flex gap-3 mb-1.5">
+<span class="text-slate-500 shrink-0">14:02:15</span>
+<span class="text-blue-400 font-bold shrink-0">[INFO]</span>
+<span class="text-slate-300">Server thread/INFO: Loading properties</span>
+</div>
+<div class="flex gap-3 mb-1.5">
+<span class="text-slate-500 shrink-0">14:02:18</span>
+<span class="text-blue-400 font-bold shrink-0">[INFO]</span>
+<span class="text-slate-300">Server thread/INFO: Default game type: SURVIVAL</span>
+</div>
+<div class="flex gap-3 mb-1.5">
+<span class="text-slate-500 shrink-0">14:05:22</span>
+<span class="text-amber-400 font-bold shrink-0">[WARN]</span>
+<span class="text-amber-200/80 italic">Can't keep up! Is the server overloaded? Running 2005ms or 40 ticks behind</span>
+</div>
+<div class="flex gap-3 mb-1.5">
+<span class="text-slate-500 shrink-0">14:10:05</span>
+<span class="text-blue-400 font-bold shrink-0">[INFO]</span>
+<span class="text-primary">&lt;Steve&gt; joined the game</span>
+</div>
+<div class="flex gap-3 mb-1.5">
+<span class="text-slate-500 shrink-0">14:10:05</span>
+<span class="text-blue-400 font-bold shrink-0">[INFO]</span>
+<span class="text-slate-300">Server thread/INFO: Steve[/127.0.0.1:54321] logged in with entity id 102</span>
+</div>
+<div class="flex gap-3 mb-1.5">
+<span class="text-slate-500 shrink-0">14:12:45</span>
+<span class="text-blue-400 font-bold shrink-0">[INFO]</span>
+<span class="text-slate-300">Saving chunks for level 'world'/minecraft:overworld</span>
+</div>
+<div class="flex gap-3 mb-1.5">
+<span class="text-slate-500 shrink-0">14:15:01</span>
+<span class="text-blue-400 font-bold shrink-0">[INFO]</span>
+<span class="text-primary">&lt;Alex&gt; joined the game</span>
+</div>
+<div class="flex gap-3 mb-1.5">
+<span class="text-slate-500 shrink-0">14:16:10</span>
+<span class="text-blue-400 font-bold shrink-0">[INFO]</span>
+<span class="text-slate-300">Server thread/INFO: &lt;Steve&gt; /tps</span>
+</div>
+<div class="flex gap-3">
+<span class="text-primary animate-pulse">_</span>
+</div>
+</div>
+<!-- Input Bar -->
+<div class="p-3 bg-[#16211a] border-t border-[#3b5443]">
+<div class="flex items-center gap-2 px-3 py-1 bg-[#111813] rounded-lg border border-transparent focus-within:border-primary transition-all">
+<span class="text-primary font-bold">$</span>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-white placeholder-[#4b6d56] py-2 font-mono text-sm" placeholder="Type a command (e.g., /op notch)..." type="text"/>
+<button class="text-primary hover:text-white transition-colors p-1">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Control Panel & Active Players -->
+<div class="w-full lg:w-80 flex flex-col gap-6">
+<!-- Server Controls -->
+<div class="flex flex-col gap-4 p-5 rounded-xl border border-slate-200 dark:border-[#3b5443] bg-white dark:bg-[#111813] shadow-sm">
+<h3 class="text-lg font-bold">Server Controls</h3>
+<div class="flex flex-col gap-3">
+<button class="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-lg bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 transition-all font-bold">
+<span class="material-symbols-outlined">play_arrow</span> Start
+                                    </button>
+<button class="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-lg bg-amber-500/10 text-amber-500 border border-amber-500/30 hover:bg-amber-500/20 transition-all font-bold">
+<span class="material-symbols-outlined">restart_alt</span> Restart
+                                    </button>
+<button class="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-lg bg-red-500/10 text-red-500 border border-red-500/30 hover:bg-red-500/20 transition-all font-bold">
+<span class="material-symbols-outlined">stop</span> Stop
+                                    </button>
+</div>
+<div class="pt-4 mt-2 border-t border-slate-200 dark:border-[#28392e] flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium">Auto-Restart</span>
+<div class="w-10 h-5 bg-primary rounded-full relative cursor-pointer">
+<div class="absolute right-1 top-1 size-3 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium">Whitelisting</span>
+<div class="w-10 h-5 bg-slate-200 dark:bg-[#28392e] rounded-full relative cursor-pointer">
+<div class="absolute left-1 top-1 size-3 bg-slate-400 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Players Sidebar -->
+<div class="flex flex-col gap-4 p-5 rounded-xl border border-slate-200 dark:border-[#3b5443] bg-white dark:bg-[#111813] shadow-sm flex-1">
+<div class="flex items-center justify-between">
+<h3 class="text-lg font-bold">Active Players</h3>
+<span class="px-2 py-0.5 rounded bg-[#28392e] text-[10px] font-bold text-primary uppercase">14 Online</span>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-cover bg-center" data-alt="Minecraft skin head avatar for Steve" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCDxc_0EUXxCUfLUXcyx7u_SgOZJXAkdM0tVYt_jG0NShZNxNhcgPHkKPj-TV9v8V5SlTo68bE8_uwG2wLquSo1gjtSN-qxJnSqdQlAZg2DG7bXdJ4hauosbs-MTIkivquCubzOXc2q5tt1V5dQNwpzwuSvqT7tmXqVwt1o_HtnZGbv0WnM91x2Xq_E_p7oe2EYucMFLUFIIHStkwJL7fK4IU5v-C3msf72BxvO83tZaHjxXyUVozDRrJ0F80uk85cycZZ2iYn-mYGq');"></div>
+<div class="flex flex-col">
+<span class="text-sm font-bold">Steve</span>
+<span class="text-[10px] text-slate-500 dark:text-[#9db9a6]">120ms • OP</span>
+</div>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-400">
+<span class="material-symbols-outlined text-lg">block</span>
+</button>
+</div>
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-cover bg-center" data-alt="Minecraft skin head avatar for Alex" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC8t_-xe99zhEz-m4wsSSjLPhETEnD5FGMBnNoP7o_9l1cURFxSKx32Wr9mQnQQm4YF0L1KCObw2_WEDhkXR1p8OX-XCF7OJy--Kj0RCjkXx7GCPWW6i22MV-TwJjWrqqdk5iHImxKnaK8aIaGI8_Pg9jFfcUIxoO3LxqN71SmIlBQ2HZAdwI4PnVW__W9O8FzBZaXv1t0MBpmL4ciEMVsJIcROBKccHVdmWeFzC3mVbMaSrXGYRR6hRfW5aqzAB0FRgDdEqR3YJma_');"></div>
+<div class="flex flex-col">
+<span class="text-sm font-bold">Alex</span>
+<span class="text-[10px] text-slate-500 dark:text-[#9db9a6]">45ms</span>
+</div>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-400">
+<span class="material-symbols-outlined text-lg">block</span>
+</button>
+</div>
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-cover bg-center" data-alt="Minecraft skin head avatar for Notch" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB1hqa4roB4JyIPKB5OVVYS8QHPAv3iTwh68fzxObmKI1PdYabVHyTUZkotq2nAaL_-kNgkaxURPmm2Y59zb28D3sNiYwcirygR13zZWkcMwBSL8nhNQ4GaQ9VBkE1C7PVc6aAZrW4dDrjcQ8Afi2ydrXhxJAmBYyEVSA5uaHP8fgurB3LHEljZ0-2PmsxDHX6AzrloOxXakmGqJ0_-PChy3NqzLeON_LupI_Qe6FhiYAsq0Pb5YiJyYbDwkPriHT_rIQb1kRalGCDC');"></div>
+<div class="flex flex-col">
+<span class="text-sm font-bold">Notch</span>
+<span class="text-[10px] text-slate-500 dark:text-[#9db9a6]">88ms</span>
+</div>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-400">
+<span class="material-symbols-outlined text-lg">block</span>
+</button>
+</div>
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-cover bg-center" data-alt="Minecraft skin head avatar for Jeb" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCfrBg2t8aHDyv7Ai7WGucHKbawq2ie0GFg_ED6L1KmTfCmfdQ-cUGqSwj7nL7tW4vDLiw_bw1N00k6sU2326vU8uVHR5rj6Te5DCbOawsw74s0sdGelSGjz_WunHnCFA0bkDl9mBE4CHVAlpMnAZ80jtKRzPTAPZ4gVb9y5Ida9pw60ZXsJPfEuFSsiznDnSYAyPQHaU-5qGMPu0f5RxWzfZjiapbxuj0yEsbZ1u0TGAvbHAYSduRzlB0buIniZ5qZa8OsRVPN8uhP');"></div>
+<div class="flex flex-col">
+<span class="text-sm font-bold">Jeb_</span>
+<span class="text-[10px] text-slate-500 dark:text-[#9db9a6]">12ms • VIP</span>
+</div>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-400">
+<span class="material-symbols-outlined text-lg">block</span>
+</button>
+</div>
+<button class="mt-2 text-xs font-bold text-primary hover:underline transition-all">View All 14 Players →</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity Section -->
+<div class="flex flex-col gap-4 mt-4">
+<h2 class="text-xl font-bold tracking-tight px-2">Recent System Logs</h2>
+<div class="overflow-hidden rounded-xl border border-slate-200 dark:border-[#3b5443] bg-white dark:bg-[#111813] shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-[#1c271f] border-b border-slate-200 dark:border-[#3b5443]">
+<th class="px-4 py-3 text-sm font-medium leading-normal w-32">Time</th>
+<th class="px-4 py-3 text-sm font-medium leading-normal w-24">Type</th>
+<th class="px-4 py-3 text-sm font-medium leading-normal">Message</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-slate-100 dark:border-[#28392e] last:border-0">
+<td class="px-4 py-4 text-slate-500 dark:text-[#9db9a6] text-xs">15:30:22</td>
+<td class="px-4 py-4">
+<span class="px-2 py-1 rounded bg-blue-500/10 text-blue-500 text-[10px] font-bold uppercase">System</span>
+</td>
+<td class="px-4 py-4 text-sm">Scheduled backup completed successfully (world_backup_20231027.zip)</td>
+</tr>
+<tr class="border-b border-slate-100 dark:border-[#28392e] last:border-0">
+<td class="px-4 py-4 text-slate-500 dark:text-[#9db9a6] text-xs">15:15:00</td>
+<td class="px-4 py-4">
+<span class="px-2 py-1 rounded bg-amber-500/10 text-amber-500 text-[10px] font-bold uppercase">RCON</span>
+</td>
+<td class="px-4 py-4 text-sm">Admin issued command: /weather clear</td>
+</tr>
+<tr class="border-b border-slate-100 dark:border-[#28392e] last:border-0">
+<td class="px-4 py-4 text-slate-500 dark:text-[#9db9a6] text-xs">14:55:12</td>
+<td class="px-4 py-4">
+<span class="px-2 py-1 rounded bg-red-500/10 text-red-500 text-[10px] font-bold uppercase">Security</span>
+</td>
+<td class="px-4 py-4 text-sm">Failed login attempt from IP 192.168.1.104 (User: Guest)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="border-t border-slate-200 dark:border-[#28392e] px-10 py-6 mt-auto bg-white dark:bg-background-dark">
+<div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex items-center gap-2">
+<div class="size-5 text-primary/60">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z" fill="currentColor"></path>
+</svg>
+</div>
+<span class="text-xs font-medium text-slate-500 dark:text-[#9db9a6]">© 2023 Arm-MC High Performance Hosting. All rights reserved.</span>
+</div>
+<div class="flex gap-6">
+<a class="text-xs font-medium text-slate-500 dark:text-[#9db9a6] hover:text-primary transition-colors" href="#">Documentation</a>
+<a class="text-xs font-medium text-slate-500 dark:text-[#9db9a6] hover:text-primary transition-colors" href="#">Support</a>
+<a class="text-xs font-medium text-slate-500 dark:text-[#9db9a6] hover:text-primary transition-colors" href="#">Terms of Service</a>
+</div>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

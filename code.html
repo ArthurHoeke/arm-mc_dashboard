@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tunnel Management Dashboard | Arm-MC Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#0a120c",
+                        "surface-dark": "#16281b",
+                        "border-dark": "#28392e",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #102216;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #28392e;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #13ec5b;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex">
+<!-- SideNavBar -->
+<aside class="w-72 border-r border-border-dark bg-background-light dark:bg-background-dark flex flex-col h-screen sticky top-0 shrink-0">
+<div class="p-6 flex flex-col h-full">
+<div class="flex items-center gap-3 mb-10">
+<div class="bg-primary/20 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary text-3xl">terminal</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-white text-lg font-bold leading-none">Arm-MC Admin</h1>
+<p class="text-[#9db9a6] text-xs font-medium">Android Node #01</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 flex-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#9db9a6] hover:bg-surface-dark hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary border border-primary/20" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">router</span>
+<span class="text-sm font-medium">Tunnel Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#9db9a6] hover:bg-surface-dark hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">User Manager</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#9db9a6] hover:bg-surface-dark hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-medium">System Logs</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#9db9a6] hover:bg-surface-dark hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Node Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-border-dark">
+<div class="bg-surface-dark rounded-xl p-4 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="text-xs text-[#9db9a6]">Device Health</span>
+<span class="text-xs text-primary font-bold">Stable</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-orange-400 text-sm">thermostat</span>
+<p class="text-white text-sm font-medium">38.4°C</p>
+</div>
+<div class="w-full bg-border-dark h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[45%]"></div>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark">
+<!-- TopNavBar -->
+<header class="h-16 border-b border-border-dark flex items-center justify-between px-8 bg-background-light dark:bg-background-dark/50 backdrop-blur-md sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<span class="text-[#9db9a6] text-sm">Docs</span>
+<span class="text-[#28392e]">/</span>
+<span class="text-[#9db9a6] text-sm">API Reference</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#9db9a6] text-xl">search</span>
+<input class="bg-surface-dark border-none rounded-lg pl-10 pr-4 py-2 text-sm text-white placeholder:text-[#9db9a6] focus:ring-1 focus:ring-primary w-64 transition-all" placeholder="Search tunnels..." type="text"/>
+</div>
+<div class="h-8 w-px bg-border-dark"></div>
+<div class="flex items-center gap-3">
+<div class="flex flex-col items-end">
+<span class="text-white text-sm font-medium leading-none">Admin_User</span>
+<span class="text-primary text-[10px] font-bold uppercase tracking-wider">Superuser</span>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary/30 p-0.5">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="User profile avatar circle" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCRpsx307suhU9nhBCu6_GXYWlBgzf6uX4NopaV7wz4CWUONUO4j8Acr6NHsPGTX8BcKQ-pBT_grRK1fQT8jPw2E8Yov9qeY9X90AKvR6yy9ho2w_mWxqsAAiN_jTQHbulmLGzMKKbgX6FzMUoCjLkh8xMtFicIh0ncpHouTNbW7wSYjvo9mi6gABK3f19DX1nxfApuJmuakffu8adZgHryTJ919n4HcYLIBEMPxbnZ5hk0968gHlDzMG3ZBOsYOMH2AMvQuIz2UWgW')"></div>
+</div>
+</div>
+</div>
+</header>
+<div class="p-8 max-w-7xl mx-auto w-full flex flex-col gap-8">
+<!-- Breadcrumbs & Heading -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-2 text-sm font-medium">
+<span class="text-[#9db9a6]">Admin</span>
+<span class="material-symbols-outlined text-xs text-[#9db9a6]">chevron_right</span>
+<span class="text-white">Tunnel Management</span>
+</div>
+<div class="flex flex-wrap justify-between items-end gap-4">
+<div class="flex flex-col gap-1">
+<h2 class="text-white text-4xl font-bold tracking-tight">Tunnel Management</h2>
+<p class="text-[#9db9a6] text-base">Monitor and manage FRPS tunnels for Minecraft instances on PumpkinMC.</p>
+</div>
+<button class="flex items-center gap-2 bg-transparent border-2 border-primary text-primary px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-primary hover:text-background-dark transition-all">
+<span class="material-symbols-outlined text-lg">cleaning_services</span>
+                        Force Cleanup
+                    </button>
+</div>
+</div>
+<!-- Stats Overview -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<p class="text-[#9db9a6] text-sm font-medium">RAM Usage</p>
+<span class="material-symbols-outlined text-primary">memory</span>
+</div>
+<div>
+<p class="text-white text-2xl font-bold">6.2GB / 8GB</p>
+<div class="w-full bg-border-dark h-1.5 rounded-full mt-2">
+<div class="bg-primary h-full w-[77.5%]"></div>
+</div>
+</div>
+<p class="text-primary text-xs font-bold">+5.2% <span class="text-[#9db9a6] font-normal italic">from last hour</span></p>
+</div>
+<div class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<p class="text-[#9db9a6] text-sm font-medium">CPU Load</p>
+<span class="material-symbols-outlined text-primary">developer_board</span>
+</div>
+<div>
+<p class="text-white text-2xl font-bold">42%</p>
+<div class="w-full bg-border-dark h-1.5 rounded-full mt-2">
+<div class="bg-orange-400 h-full w-[42%]"></div>
+</div>
+</div>
+<p class="text-orange-400 text-xs font-bold">-2.1% <span class="text-[#9db9a6] font-normal italic">from last hour</span></p>
+</div>
+<div class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<p class="text-[#9db9a6] text-sm font-medium">Active Tunnels</p>
+<span class="material-symbols-outlined text-primary">hub</span>
+</div>
+<div>
+<p class="text-white text-2xl font-bold">128 / 500</p>
+<div class="w-full bg-border-dark h-1.5 rounded-full mt-2">
+<div class="bg-primary h-full w-[25.6%]"></div>
+</div>
+</div>
+<p class="text-primary text-xs font-bold">+12% <span class="text-[#9db9a6] font-normal italic">new connections</span></p>
+</div>
+<div class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<p class="text-[#9db9a6] text-sm font-medium">Network Traffic</p>
+<span class="material-symbols-outlined text-primary">speed</span>
+</div>
+<div>
+<p class="text-white text-2xl font-bold">1.2 GB/s</p>
+<div class="flex gap-1 mt-2 items-end h-4">
+<div class="bg-primary/40 w-full h-2 rounded-t-sm"></div>
+<div class="bg-primary/40 w-full h-3 rounded-t-sm"></div>
+<div class="bg-primary w-full h-4 rounded-t-sm"></div>
+<div class="bg-primary/60 w-full h-2 rounded-t-sm"></div>
+<div class="bg-primary/40 w-full h-1 rounded-t-sm"></div>
+</div>
+</div>
+<p class="text-red-400 text-xs font-bold">-1.2% <span class="text-[#9db9a6] font-normal italic">downlink delta</span></p>
+</div>
+</div>
+<!-- Table Section -->
+<div class="bg-surface-dark border border-border-dark rounded-xl overflow-hidden flex flex-col">
+<div class="p-6 border-b border-border-dark flex flex-wrap gap-4 items-center justify-between">
+<div class="flex items-center gap-4">
+<h3 class="text-white font-bold text-lg">Live Connections</h3>
+<span class="bg-primary/10 text-primary text-[10px] px-2 py-1 rounded border border-primary/20 uppercase font-black">Real-time</span>
+</div>
+<div class="flex gap-2">
+<select class="bg-background-dark border-border-dark rounded-lg text-sm text-white focus:ring-primary focus:border-primary px-4 py-2">
+<option>All Status</option>
+<option>Active</option>
+<option>Available</option>
+</select>
+<button class="bg-border-dark text-white p-2 rounded-lg hover:bg-surface-dark transition-colors border border-transparent hover:border-border-dark">
+<span class="material-symbols-outlined text-xl">filter_list</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-background-dark/50">
+<th class="px-6 py-4 text-[#9db9a6] font-medium text-xs uppercase tracking-wider">Subdomain</th>
+<th class="px-6 py-4 text-[#9db9a6] font-medium text-xs uppercase tracking-wider">Remote Port</th>
+<th class="px-6 py-4 text-[#9db9a6] font-medium text-xs uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-[#9db9a6] font-medium text-xs uppercase tracking-wider">User ID</th>
+<th class="px-6 py-4 text-[#9db9a6] font-medium text-xs uppercase tracking-wider">Expiry</th>
+<th class="px-6 py-4 text-[#9db9a6] font-medium text-xs uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-dark/50">
+<!-- Row 1 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4 font-mono text-primary text-sm">survival.armmc.com</td>
+<td class="px-6 py-4 text-white text-sm">25565</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="text-primary text-xs font-bold uppercase tracking-widest">Active</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<a class="text-[#9db9a6] text-sm hover:text-white underline underline-offset-4 decoration-border-dark" href="#">usr_9921_beta</a>
+</td>
+<td class="px-6 py-4 text-[#9db9a6] text-sm italic">In 2 days</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-red-500/10 text-red-500 border border-red-500/20 px-3 py-1.5 rounded text-xs font-bold hover:bg-red-500 hover:text-white transition-all">Kill</button>
+<button class="bg-surface-dark text-white border border-border-dark px-3 py-1.5 rounded text-xs font-bold hover:bg-white hover:text-background-dark transition-all">Details</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4 font-mono text-primary text-sm">creative.armmc.com</td>
+<td class="px-6 py-4 text-white text-sm">25566</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="relative inline-flex rounded-full h-2 w-2 bg-[#9db9a6]"></span>
+<span class="text-[#9db9a6] text-xs font-bold uppercase tracking-widest">Available</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<a class="text-[#9db9a6] text-sm hover:text-white underline underline-offset-4 decoration-border-dark" href="#">usr_4401_lite</a>
+</td>
+<td class="px-6 py-4 text-[#9db9a6] text-sm italic">Expired</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-red-500/10 text-red-500 border border-red-500/20 px-3 py-1.5 rounded text-xs font-bold hover:bg-red-500 hover:text-white transition-all">Kill</button>
+<button class="bg-surface-dark text-white border border-border-dark px-3 py-1.5 rounded text-xs font-bold hover:bg-white hover:text-background-dark transition-all">Details</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4 font-mono text-primary text-sm">hardcore.armmc.com</td>
+<td class="px-6 py-4 text-white text-sm">25600</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="text-primary text-xs font-bold uppercase tracking-widest">Active</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<a class="text-[#9db9a6] text-sm hover:text-white underline underline-offset-4 decoration-border-dark" href="#">usr_0012_god</a>
+</td>
+<td class="px-6 py-4 text-[#9db9a6] text-sm italic">In 14 hours</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-red-500/10 text-red-500 border border-red-500/20 px-3 py-1.5 rounded text-xs font-bold hover:bg-red-500 hover:text-white transition-all">Kill</button>
+<button class="bg-surface-dark text-white border border-border-dark px-3 py-1.5 rounded text-xs font-bold hover:bg-white hover:text-background-dark transition-all">Details</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4 font-mono text-primary text-sm">testing.dev.armmc.com</td>
+<td class="px-6 py-4 text-white text-sm">30001</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="text-primary text-xs font-bold uppercase tracking-widest">Active</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<a class="text-[#9db9a6] text-sm hover:text-white underline underline-offset-4 decoration-border-dark" href="#">dev_internal_01</a>
+</td>
+<td class="px-6 py-4 text-[#9db9a6] text-sm italic">Infinite</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-red-500/10 text-red-500 border border-red-500/20 px-3 py-1.5 rounded text-xs font-bold hover:bg-red-500 hover:text-white transition-all">Kill</button>
+<button class="bg-surface-dark text-white border border-border-dark px-3 py-1.5 rounded text-xs font-bold hover:bg-white hover:text-background-dark transition-all">Details</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-border-dark flex items-center justify-between">
+<p class="text-[#9db9a6] text-xs">Showing 4 of 128 active tunnels</p>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded bg-surface-dark text-[#9db9a6] border border-border-dark cursor-not-allowed opacity-50">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-background-dark font-bold text-xs">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-surface-dark text-white border border-border-dark text-xs hover:bg-border-dark">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-surface-dark text-white border border-border-dark text-xs hover:bg-border-dark">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-surface-dark text-white border border-border-dark hover:bg-border-dark">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Empty State Concept (Hidden by default, shown here for structure) -->
+<div class="hidden bg-surface-dark/30 border-2 border-dashed border-border-dark rounded-xl p-20 flex-col items-center justify-center gap-4">
+<div class="bg-border-dark p-6 rounded-full">
+<span class="material-symbols-outlined text-6xl text-[#9db9a6]">leak_remove</span>
+</div>
+<div class="text-center">
+<p class="text-white text-xl font-bold">No Tunnels Found</p>
+<p class="text-[#9db9a6]">Try adjusting your search or filter settings.</p>
+</div>
+<button class="text-primary font-bold text-sm underline underline-offset-4">Reset all filters</button>
+</div>
+</div>
+</main>
+</body></html>
