@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: 'AIzaSyDAAeJwBR7MqkwaiSp3un5EauMbva0Egek',
+    apiKey: 'AIzaSyBQwSThqbXHqWu9-FRfcbJ9A2p1oTq7e5s',
     authDomain: 'arm-mc.firebaseapp.com',
     projectId: 'arm-mc',
     storageBucket: 'arm-mc.firebasestorage.app',
