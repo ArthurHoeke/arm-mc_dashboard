@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.arm-mc.com:3000',
+  apiUrl: 'https://api.arm-mc.com',
   firebase: {
       apiKey: "AIzaSyBFspm96MswCFodzHJeTvNZHDNB5jxiakQ",
       authDomain: "arm-mc.firebaseapp.com",
