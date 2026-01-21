@@ -80,6 +80,7 @@ export class SidebarComponent {
   navItems = signal<NavItem[]>([
     { icon: 'dashboard', label: 'Dashboard', route: '/dashboard' },
     { icon: 'router', label: 'Tunnel Management', route: '/tunnels', filled: true },
+    { icon: 'campaign', label: 'Announcements', route: '/announcements' },
     { icon: 'group', label: 'User Manager', route: '/users' },
     { icon: 'description', label: 'System Logs', route: '/logs' },
     { icon: 'settings', label: 'Node Settings', route: '/settings' },
