@@ -1,20 +1,24 @@
 import { Component, inject, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { AdminService } from '../../../core/services/admin.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   template: `
     <header
       class="h-16 border-b border-border-dark flex items-center justify-between px-8 bg-background-dark/50 backdrop-blur-md sticky top-0 z-10"
     >
       <!-- Left: Breadcrumbs -->
-      <div class="flex items-center gap-4">
-        <span class="text-muted text-sm">Docs</span>
-        <span class="text-border-dark">/</span>
-        <span class="text-muted text-sm">API Reference</span>
+      <div class="flex items-center gap-2 text-sm font-medium">
+        <a routerLink="/" class="text-muted hover:text-white transition-colors">Home</a>
+        @if (breadcrumbLabel()) {
+          <span class="material-symbols-outlined text-xs text-muted">chevron_right</span>
+          <span class="text-white">{{ breadcrumbLabel() }}</span>
+        }
       </div>
 
       <!-- Right: Search & User -->
@@ -40,9 +44,11 @@ import { AuthService } from '../../../core/services/auth.service';
             <span class="text-white text-sm font-medium leading-none">
               {{ displayName() }}
             </span>
-            <span class="text-primary text-[10px] font-bold uppercase tracking-wider">
-              {{ userRole() }}
-            </span>
+            @if (adminService.isAdmin()) {
+              <span class="text-primary text-[10px] font-bold uppercase tracking-wider">
+                {{ userRole() }}
+              </span>
+            }
           </div>
           <button
             (click)="onSignOut()"
@@ -76,7 +82,10 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class HeaderComponent {
   private authService = inject(AuthService);
-  userRole = input<string>('Superuser');
+  adminService = inject(AdminService);
+  
+  userRole = input<string>('Admin');
+  breadcrumbLabel = input<string>('');
 
   displayName = computed(() => {
     const user = this.authService.currentUser();
