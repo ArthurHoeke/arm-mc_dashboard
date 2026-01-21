@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AdminService } from '../../../core/services/admin.service';
 
 interface NavItem {
   icon: string;
@@ -24,8 +25,8 @@ interface NavItem {
             <span class="material-symbols-outlined text-primary text-3xl">terminal</span>
           </div>
           <div class="flex flex-col">
-            <h1 class="text-white text-lg font-bold leading-none">Arm-MC Admin</h1>
-            <p class="text-muted text-xs font-medium">Android Node #01</p>
+            <h1 class="text-white text-lg font-bold leading-none">Arm-MC</h1>
+            <p class="text-muted text-xs font-medium">{{ adminService.isAdmin() ? 'Admin Panel' : 'User Portal' }}</p>
           </div>
         </div>
 
@@ -77,14 +78,24 @@ interface NavItem {
   ],
 })
 export class SidebarComponent {
-  navItems = signal<NavItem[]>([
+  adminService = inject(AdminService);
+
+  private adminNavItems: NavItem[] = [
     { icon: 'dashboard', label: 'Dashboard', route: '/dashboard' },
     { icon: 'router', label: 'Tunnel Management', route: '/tunnels', filled: true },
     { icon: 'campaign', label: 'Announcements', route: '/announcements' },
     { icon: 'group', label: 'User Manager', route: '/users' },
     { icon: 'description', label: 'System Logs', route: '/logs' },
     { icon: 'settings', label: 'Node Settings', route: '/settings' },
-  ]);
+  ];
+
+  private userNavItems: NavItem[] = [
+    { icon: 'person', label: 'Profile', route: '/profile' },
+  ];
+
+  navItems = computed(() => {
+    return this.adminService.isAdmin() ? this.adminNavItems : this.userNavItems;
+  });
 
   getIconStyle(filled?: boolean): string | null {
     return filled ? "'FILL' 1" : null;
