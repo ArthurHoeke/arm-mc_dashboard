@@ -24,7 +24,7 @@ import { AdminService } from '../../../core/services/admin.service';
       <!-- Right: Search & User -->
       <div class="flex items-center gap-6">
         <!-- Search -->
-        <div class="relative group">
+        <!-- <div class="relative group">
           <span
             class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted text-xl"
             >search</span
@@ -34,7 +34,7 @@ import { AdminService } from '../../../core/services/admin.service';
             placeholder="Search tunnels..."
             type="text"
           />
-        </div>
+        </div> -->
 
         <div class="h-8 w-px bg-border-dark"></div>
 

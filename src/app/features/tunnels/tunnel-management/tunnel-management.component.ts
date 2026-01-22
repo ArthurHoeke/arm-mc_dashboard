@@ -1,4 +1,4 @@
-import { Component, signal, inject, OnInit, computed } from '@angular/core';
+import { Component, signal, inject, OnInit, OnDestroy, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService, Tunnel, TunnelStats, AdminStats } from '../../../core/services/api.service';
@@ -11,6 +11,12 @@ interface StatCard {
   percentageChange: string;
   percentageLabel: string;
   color: 'primary' | 'orange' | 'red';
+}
+
+interface ToastMessage {
+  id: number;
+  message: string;
+  type: 'success' | 'error';
 }
 
 @Component({
@@ -33,6 +39,23 @@ interface StatCard {
           </p>
         </div>
         <div class="flex gap-3">
+          <!-- Auto Refresh Toggle -->
+          <div class="flex items-center gap-3 bg-surface-dark border border-border-dark px-4 py-2.5 rounded-lg">
+            <span class="text-muted text-sm font-medium">Auto Refresh</span>
+            <button
+              (click)="toggleAutoRefresh()"
+              class="relative w-10 h-5 rounded-full transition-colors"
+              [ngClass]="autoRefreshEnabled() ? 'bg-primary' : 'bg-border-dark'"
+            >
+              <span
+                class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform"
+                [ngClass]="autoRefreshEnabled() ? 'translate-x-5' : 'translate-x-0'"
+              ></span>
+            </button>
+            @if (autoRefreshEnabled()) {
+              <span class="text-primary text-xs font-bold">{{ autoRefreshCountdown() }}s</span>
+            }
+          </div>
           <button
             (click)="loadData()"
             class="flex items-center gap-2 bg-surface-dark border border-border-dark text-white px-4 py-2.5 rounded-lg font-bold text-sm hover:bg-border-dark transition-all"
@@ -41,7 +64,7 @@ interface StatCard {
             Refresh
           </button>
           <button
-            (click)="forceCleanup()"
+            (click)="openCleanupModal()"
             [disabled]="isCleaningUp()"
             class="flex items-center gap-2 bg-transparent border-2 border-primary text-primary px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-primary hover:text-background-dark transition-all disabled:opacity-50"
           >
@@ -235,6 +258,117 @@ interface StatCard {
         </div>
       }
     </div>
+
+    <!-- Kill Tunnel Confirmation Modal -->
+    @if (showKillModal()) {
+      <div class="fixed inset-0 bg-black/60 flex items-center justify-center z-50" (click)="closeKillModal()">
+        <div 
+          class="bg-surface-dark border border-border-dark rounded-xl w-full max-w-md mx-4"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="p-6 flex flex-col items-center gap-4">
+            <div class="bg-red-500/20 p-4 rounded-full">
+              <span class="material-symbols-outlined text-red-400 text-4xl">power_off</span>
+            </div>
+            <h3 class="text-white font-bold text-lg">Kill Tunnel?</h3>
+            <p class="text-muted text-sm text-center">
+              Are you sure you want to kill tunnel 
+              <span class="text-primary font-mono font-bold">{{ killingTunnel()?.subdomain }}</span>? 
+              This will immediately terminate the connection.
+            </p>
+          </div>
+          
+          <div class="p-6 border-t border-border-dark flex justify-center gap-3">
+            <button
+              (click)="closeKillModal()"
+              class="px-6 py-2.5 rounded-lg border border-border-dark text-white font-medium hover:bg-border-dark transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              (click)="confirmKillTunnel()"
+              [disabled]="isKilling()"
+              class="px-6 py-2.5 rounded-lg bg-red-500 text-white font-bold hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+            >
+              @if (isKilling()) {
+                <span class="material-symbols-outlined animate-spin text-lg">progress_activity</span>
+              } @else {
+                <span class="material-symbols-outlined text-lg">power_off</span>
+                Kill Tunnel
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Force Cleanup Confirmation Modal -->
+    @if (showCleanupModal()) {
+      <div class="fixed inset-0 bg-black/60 flex items-center justify-center z-50" (click)="closeCleanupModal()">
+        <div 
+          class="bg-surface-dark border border-border-dark rounded-xl w-full max-w-md mx-4"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="p-6 flex flex-col items-center gap-4">
+            <div class="bg-orange-400/20 p-4 rounded-full">
+              <span class="material-symbols-outlined text-orange-400 text-4xl">cleaning_services</span>
+            </div>
+            <h3 class="text-white font-bold text-lg">Force Cleanup?</h3>
+            <p class="text-muted text-sm text-center">
+              This will clean up all expired tunnels and terminate their connections. 
+              This action helps free up resources but cannot be undone.
+            </p>
+          </div>
+          
+          <div class="p-6 border-t border-border-dark flex justify-center gap-3">
+            <button
+              (click)="closeCleanupModal()"
+              class="px-6 py-2.5 rounded-lg border border-border-dark text-white font-medium hover:bg-border-dark transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              (click)="confirmCleanup()"
+              [disabled]="isCleaningUp()"
+              class="px-6 py-2.5 rounded-lg bg-orange-500 text-white font-bold hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+            >
+              @if (isCleaningUp()) {
+                <span class="material-symbols-outlined animate-spin text-lg">progress_activity</span>
+              } @else {
+                <span class="material-symbols-outlined text-lg">cleaning_services</span>
+                Run Cleanup
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Toast Notifications -->
+    <div class="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
+      @for (toast of toasts(); track toast.id) {
+        <div 
+          class="flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg animate-slide-in"
+          [ngClass]="toast.type === 'success' ? 'bg-primary/20 border border-primary/30' : 'bg-red-500/20 border border-red-500/30'"
+        >
+          <span 
+            class="material-symbols-outlined"
+            [ngClass]="toast.type === 'success' ? 'text-primary' : 'text-red-400'"
+          >
+            {{ toast.type === 'success' ? 'check_circle' : 'error' }}
+          </span>
+          <p [ngClass]="toast.type === 'success' ? 'text-primary' : 'text-red-400'" class="text-sm font-medium">
+            {{ toast.message }}
+          </p>
+          <button 
+            (click)="removeToast(toast.id)"
+            class="ml-2 text-muted hover:text-white transition-colors"
+          >
+            <span class="material-symbols-outlined text-sm">close</span>
+          </button>
+        </div>
+      }
+    </div>
   `,
   styles: [
     `
@@ -255,16 +389,47 @@ interface StatCard {
       .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: #13ec5b;
       }
+      
+      @keyframes slide-in {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      
+      .animate-slide-in {
+        animation: slide-in 0.3s ease-out;
+      }
     `,
   ],
 })
-export class TunnelManagementComponent implements OnInit {
+export class TunnelManagementComponent implements OnInit, OnDestroy {
   private apiService = inject(ApiService);
+  private autoRefreshInterval: ReturnType<typeof setInterval> | null = null;
+  private countdownInterval: ReturnType<typeof setInterval> | null = null;
+  private toastCounter = 0;
   
   statusFilter = 'all';
   isLoading = signal(true);
   isCleaningUp = signal(false);
+  isKilling = signal(false);
   error = signal<string | null>(null);
+  
+  // Auto refresh
+  autoRefreshEnabled = signal(false);
+  autoRefreshCountdown = signal(5);
+  
+  // Modals
+  showKillModal = signal(false);
+  showCleanupModal = signal(false);
+  killingTunnel = signal<Tunnel | null>(null);
+  
+  // Toast notifications
+  toasts = signal<ToastMessage[]>([]);
 
   tunnels = signal<Tunnel[]>([]);
   tunnelStats = signal<TunnelStats | null>(null);
@@ -336,6 +501,41 @@ export class TunnelManagementComponent implements OnInit {
     this.loadData();
   }
   
+  ngOnDestroy(): void {
+    this.stopAutoRefresh();
+  }
+  
+  toggleAutoRefresh(): void {
+    if (this.autoRefreshEnabled()) {
+      this.stopAutoRefresh();
+    } else {
+      this.startAutoRefresh();
+    }
+  }
+  
+  private startAutoRefresh(): void {
+    this.autoRefreshEnabled.set(true);
+    this.autoRefreshCountdown.set(5);
+    
+    this.countdownInterval = setInterval(() => {
+      const current = this.autoRefreshCountdown();
+      if (current <= 1) {
+        this.autoRefreshCountdown.set(5);
+        this.loadData();
+      } else {
+        this.autoRefreshCountdown.set(current - 1);
+      }
+    }, 1000);
+  }
+  
+  private stopAutoRefresh(): void {
+    this.autoRefreshEnabled.set(false);
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+      this.countdownInterval = null;
+    }
+  }
+  
   async loadData(): Promise<void> {
     this.isLoading.set(true);
     this.error.set(null);
@@ -365,38 +565,72 @@ export class TunnelManagementComponent implements OnInit {
     this.statusFilter = 'all';
   }
 
-  async killTunnel(tunnel: Tunnel): Promise<void> {
-    if (!confirm(`Are you sure you want to kill tunnel ${tunnel.subdomain}?`)) {
-      return;
-    }
+  // Kill Tunnel Modal
+  killTunnel(tunnel: Tunnel): void {
+    this.killingTunnel.set(tunnel);
+    this.showKillModal.set(true);
+  }
+  
+  closeKillModal(): void {
+    this.showKillModal.set(false);
+    this.killingTunnel.set(null);
+  }
+  
+  async confirmKillTunnel(): Promise<void> {
+    const tunnel = this.killingTunnel();
+    if (!tunnel) return;
+    
+    this.isKilling.set(true);
     
     try {
       await this.apiService.killTunnel(tunnel.id);
-      // Reload data after killing
+      this.closeKillModal();
+      this.showToast(`Tunnel ${tunnel.subdomain} has been killed`, 'success');
       await this.loadData();
     } catch (err) {
       console.error('Error killing tunnel:', err);
-      alert('Failed to kill tunnel');
+      this.showToast('Failed to kill tunnel', 'error');
+    } finally {
+      this.isKilling.set(false);
     }
   }
   
-  async forceCleanup(): Promise<void> {
-    if (!confirm('Are you sure you want to force cleanup expired tunnels?')) {
-      return;
-    }
-    
+  // Cleanup Modal
+  openCleanupModal(): void {
+    this.showCleanupModal.set(true);
+  }
+  
+  closeCleanupModal(): void {
+    this.showCleanupModal.set(false);
+  }
+  
+  async confirmCleanup(): Promise<void> {
     this.isCleaningUp.set(true);
     
     try {
       const result = await this.apiService.forceCleanup();
-      alert(`Cleanup complete. ${result.cleaned} tunnel(s) cleaned.`);
+      this.closeCleanupModal();
+      this.showToast(`Cleanup complete. ${result.cleaned} tunnel(s) cleaned.`, 'success');
       await this.loadData();
     } catch (err) {
       console.error('Error during cleanup:', err);
-      alert('Failed to run cleanup');
+      this.showToast('Failed to run cleanup', 'error');
     } finally {
       this.isCleaningUp.set(false);
     }
+  }
+  
+  // Toast notifications
+  showToast(message: string, type: 'success' | 'error'): void {
+    const id = ++this.toastCounter;
+    this.toasts.update(toasts => [...toasts, { id, message, type }]);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => this.removeToast(id), 5000);
+  }
+  
+  removeToast(id: number): void {
+    this.toasts.update(toasts => toasts.filter(t => t.id !== id));
   }
 
   viewDetails(tunnel: Tunnel): void {
