@@ -76,7 +76,7 @@ import { ApiService, AdminStats } from '../../core/services/api.service';
       
       <div class="bg-surface-dark border border-border-dark rounded-xl p-6 flex flex-col gap-4">
         <div class="flex items-center justify-between">
-          <span class="material-symbols-outlined text-gold text-3xl">star</span>
+          <span class="material-symbols-outlined text-gold text-3xl">favorite</span>
         </div>
         <div>
           @if (isLoading()) {
