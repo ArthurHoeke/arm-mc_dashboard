@@ -50,7 +50,7 @@ export class AuthService {
   async signInWithEmail(email: string, password: string): Promise<void> {
     try {
       await signInWithEmailAndPassword(this.auth, email, password);
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/index']);
     } catch (error) {
       throw error;
     }
@@ -60,7 +60,7 @@ export class AuthService {
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(this.auth, provider);
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/index']);
     } catch (error) {
       throw error;
     }

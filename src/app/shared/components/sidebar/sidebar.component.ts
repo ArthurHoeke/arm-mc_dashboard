@@ -40,7 +40,7 @@ interface NavItem {
             <a
               [routerLink]="item.route"
               routerLinkActive="bg-primary/10 text-primary border border-primary/20"
-              [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
+              [routerLinkActiveOptions]="{ exact: item.route === '/index' }"
               class="flex items-center gap-3 px-4 py-3 rounded-lg text-muted hover:bg-surface-dark hover:text-white transition-colors border border-transparent"
             >
               <span
@@ -85,7 +85,7 @@ export class SidebarComponent {
   adminService = inject(AdminService);
 
   private adminNavItems: NavItem[] = [
-    { icon: 'dashboard', label: 'Dashboard', route: '/dashboard' },
+    { icon: 'dashboard', label: 'Dashboard', route: '/index' },
     { icon: 'router', label: 'Tunnel Management', route: '/tunnels', filled: true },
     { icon: 'campaign', label: 'Announcements', route: '/announcements' },
     // { icon: 'group', label: 'User Manager', route: '/users' },
