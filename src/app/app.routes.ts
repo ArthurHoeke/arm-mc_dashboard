@@ -7,7 +7,7 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'index',
     pathMatch: 'full',
   },
   {
@@ -33,7 +33,7 @@ export const routes: Routes = [
           import('./features/profile/profile.component').then((m) => m.ProfileComponent),
       },
       {
-        path: 'dashboard',
+        path: 'index',
         canActivate: [nonAdminRedirectGuard],
         loadComponent: () =>
           import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
